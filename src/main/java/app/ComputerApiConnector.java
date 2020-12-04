@@ -1,7 +1,10 @@
 package app;
 
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -38,5 +41,27 @@ public class ComputerApiConnector {
                 Boolean.class);
         System.out.println(responseEntity.getBody());
     }
-}
 
+    @GetMapping("/sendDataToComputerApi")
+    public void sendDataToComputerApi(){
+
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add(httpHeaders.CONTENT_TYPE,"application/json");
+        String objToSend = "{\n" +
+                "        \"id\": 5,\n" +
+                "        \"ddrType\": \"DDR5\",\n" +
+                "        \"memorySize\": 50,\n" +
+                "        \"mhz\": 5000\n" +
+                "    }";
+
+        HttpEntity<String> httpEntity = new HttpEntity<>(objToSend, httpHeaders);
+
+        ResponseEntity<Void> responseEntity = restTemplate.exchange(
+                "http://localhost:8081/Gradle___pl_bartek_ficek___electronic_apps_1_0_SNAPSHOT_war__exploded_/api/computers",
+                HttpMethod.POST,
+                httpEntity,
+                Void.class);
+        System.out.println(responseEntity.getBody());
+    }
+}
